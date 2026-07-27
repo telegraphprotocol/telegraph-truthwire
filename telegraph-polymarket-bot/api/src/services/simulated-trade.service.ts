@@ -46,10 +46,57 @@ export class SimulatedTradeService {
     });
   }
 
+  // Settles a specific open trade at exitPrice: marks it closed, computes
+  // P&L, and returns the reserved stake + P&L to the portfolio balance
+  // (openTrade already deducted the stake up front, so this is the net
+  // settlement). Shared by the scheduled hold-period review and by an
+  // early exit triggered by a contradicting signal in the same market.
+  private static async settleTrade(trade: { id: string; stake: number; entryPrice: number }, exitPrice: number, reason: string) {
+    const pnl = trade.stake * ((exitPrice - trade.entryPrice) / trade.entryPrice);
+
+    await prisma.simulatedTrade.update({
+      where: { id: trade.id },
+      data: { status: 'closed', exitPrice, pnl, closedAt: new Date() },
+    });
+
+    const portfolio = await this.getPortfolio();
+    await prisma.portfolioState.update({
+      where: { singleton: PORTFOLIO_SINGLETON },
+      data: { balance: portfolio.balance + trade.stake + pnl, totalPnl: portfolio.totalPnl + pnl },
+    });
+
+    console.log(`[simulated-trade] closed trade ${trade.id} (${reason}) pnl=$${pnl.toFixed(2)}`);
+  }
+
   static async openTrade(signalId: string, market: MatchedMarket, action: string, likelihood: number | null) {
     const side = action === 'buy_yes' ? 'BUY' : 'SELL';
     const entryPrice = action === 'buy_yes' ? parseCentsToPrice(market.yesPrice) : parseCentsToPrice(market.noPrice);
     if (entryPrice === null || entryPrice <= 0) return;
+
+    // A new decision for a market we're already positioned in must be
+    // reconciled against what we actually hold before opening anything new —
+    // we can't "sell" NO shares we don't own just because a signal said so.
+    const existingPosition = await prisma.simulatedTrade.findFirst({
+      where: { marketSlug: market.slug, status: 'open' },
+    });
+
+    if (existingPosition) {
+      if (existingPosition.side === side) {
+        console.log(`[simulated-trade] already holding an open ${side} position on "${market.title}" — skipping duplicate`);
+        return;
+      }
+
+      // The new signal contradicts the position we actually own (e.g. we
+      // hold YES shares but the new decision is buy_no) — the correct
+      // action is to sell what we own at its current price, not open an
+      // unrelated second position alongside it.
+      const existingExitPrice = existingPosition.side === 'BUY' ? parseCentsToPrice(market.yesPrice) : parseCentsToPrice(market.noPrice);
+      if (existingExitPrice === null) {
+        console.log(`[simulated-trade] contradicting signal on "${market.title}" but couldn't price the existing ${existingPosition.side} position — leaving it open`);
+        return;
+      }
+      await this.settleTrade(existingPosition, existingExitPrice, `contradicting signal — new decision is ${action}`);
+    }
 
     const portfolio = await this.getPortfolio();
     const confidenceMultiplier = likelihood !== null ? Math.max(0.2, Math.min(1, likelihood)) : 0.5;
@@ -92,23 +139,7 @@ export class SimulatedTradeService {
     for (const trade of openTrades) {
       const exitPrice = await getCurrentPrice(trade);
       if (exitPrice === null) continue;
-
-      const pnl = trade.stake * ((exitPrice - trade.entryPrice) / trade.entryPrice);
-
-      await prisma.simulatedTrade.update({
-        where: { id: trade.id },
-        data: { status: 'closed', exitPrice, pnl, closedAt: new Date() },
-      });
-
-      // Return the reserved stake plus/minus the realized P&L — openTrade
-      // already deducted the stake up front, so this is the net settlement.
-      const portfolio = await this.getPortfolio();
-      await prisma.portfolioState.update({
-        where: { singleton: PORTFOLIO_SINGLETON },
-        data: { balance: portfolio.balance + trade.stake + pnl, totalPnl: portfolio.totalPnl + pnl },
-      });
-
-      console.log(`[simulated-trade] closed trade ${trade.id} pnl=$${pnl.toFixed(2)}`);
+      await this.settleTrade(trade, exitPrice, 'hold period elapsed');
     }
   }
 

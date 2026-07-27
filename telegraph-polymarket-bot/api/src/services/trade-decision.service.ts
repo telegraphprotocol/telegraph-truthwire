@@ -39,17 +39,6 @@ const normalizeAction = (action: unknown): TradeAction | null => {
   return null;
 };
 
-// Below this margin, the gap between our estimate and the market's implied
-// probability isn't worth trading on — treat it as noise rather than edge.
-const MIN_EDGE = 0.05;
-
-const parseCentsToProbability = (raw: string | null | undefined): number | null => {
-  if (!raw) return null;
-  const numeric = Number(raw.replace('¢', ''));
-  if (!Number.isFinite(numeric)) return null;
-  return numeric / 100;
-};
-
 export class TradeDecisionService {
   static async decide(signal: NormalizedSignal, market: MatchedMarket): Promise<TradeDecision> {
     const userPrompt = [
@@ -67,7 +56,7 @@ export class TradeDecisionService {
       return fallback('LLM call failed');
     }
 
-    let action = normalizeAction(parsed.action);
+    const action = normalizeAction(parsed.action);
     if (!action) {
       console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — invalid action from LLM: ${JSON.stringify(parsed.action)}`);
       return fallback('LLM returned an invalid action');
@@ -75,30 +64,11 @@ export class TradeDecisionService {
 
     const likelihoodRaw = Number(parsed.likelihood);
     const likelihood = Number.isFinite(likelihoodRaw) ? Math.max(0, Math.min(1, likelihoodRaw)) : 0;
-    let reason = typeof parsed.reason === 'string' && parsed.reason.trim() ? parsed.reason.trim() : 'No reason provided by LLM';
+    const reason = typeof parsed.reason === 'string' && parsed.reason.trim() ? parsed.reason.trim() : 'No reason provided by LLM';
 
-    // Guard against a claimed edge that isn't actually there — the LLM says
-    // it found value, but its own likelihood doesn't actually diverge from
-    // the market's implied probability by a meaningful margin. This is a
-    // value-betting edge check (comparing likelihood to market price), not
-    // an "is likelihood above/below 50%" check — a low-likelihood buy_yes is
-    // legitimate when the market implies an even lower probability.
-    const impliedYes = parseCentsToProbability(market.yesPrice);
-    const impliedNo = parseCentsToProbability(market.noPrice);
-
-    if (action === 'buy_yes' && impliedYes !== null && likelihood - impliedYes < MIN_EDGE) {
-      const edge = (likelihood - impliedYes).toFixed(2);
-      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — insufficient edge: buy_yes with likelihood=${likelihood} vs implied YES=${impliedYes} (edge=${edge}), forcing wait. Original reason: ${reason}`);
-      action = 'wait';
-      reason = `Overridden to wait: buy_yes edge (${edge}) was below the ${MIN_EDGE} minimum. Original reason: ${reason}`;
-    } else if (action === 'buy_no' && impliedNo !== null && (1 - likelihood) - impliedNo < MIN_EDGE) {
-      const edge = ((1 - likelihood) - impliedNo).toFixed(2);
-      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — insufficient edge: buy_no with likelihood=${likelihood} vs implied NO=${impliedNo} (edge=${edge}), forcing wait. Original reason: ${reason}`);
-      action = 'wait';
-      reason = `Overridden to wait: buy_no edge (${edge}) was below the ${MIN_EDGE} minimum. Original reason: ${reason}`;
-    } else {
-      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — action=${action} likelihood=${likelihood} reason=${reason}`);
-    }
+    // No server-side second-guessing of the LLM's call here — action,
+    // likelihood, and reason are used exactly as the LLM returned them.
+    console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — action=${action} likelihood=${likelihood} reason=${reason}`);
 
     return { action, likelihood, reason };
   }

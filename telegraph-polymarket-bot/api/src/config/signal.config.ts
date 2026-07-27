@@ -9,8 +9,8 @@ const DEFAULT_INTENTS = [
   'DEEPFAKE_DETECTION', 'MEDIA_AUTHENTICITY_CHECK', 'IMAGE_VERIFICATION', 'VIDEO_VERIFICATION',
 ];
 const DEFAULT_SIM_STARTING_BALANCE_USD = 1000;
-const DEFAULT_SIM_STAKE_PCT = 0.05;
-const DEFAULT_SIM_MAX_STAKE_USD = 100;
+const DEFAULT_SIM_MAX_STAKE_USD = 10;
+const DEFAULT_SIM_MIN_SHARES = 10;
 const DEFAULT_SIM_HOLD_HOURS = 6;
 
 const parseList = (raw?: string, fallback: string[] = []) => {
@@ -32,7 +32,7 @@ export const SIGNAL_CONFIG = {
   serviceWalletPrivateKey: process.env.SERVICE_WALLET_PRIVATE_KEY || '',
   intents: parseList(process.env.SIGNAL_INTENTS, DEFAULT_INTENTS),
   simStartingBalanceUsd: parseFloatEnv(process.env.SIM_STARTING_BALANCE_USD, DEFAULT_SIM_STARTING_BALANCE_USD),
-  simStakePct: parseFloatEnv(process.env.SIM_STAKE_PCT, DEFAULT_SIM_STAKE_PCT),
   simMaxStakeUsd: parseFloatEnv(process.env.SIM_MAX_STAKE_USD, DEFAULT_SIM_MAX_STAKE_USD),
+  simMinShares: parseFloatEnv(process.env.SIM_MIN_SHARES, DEFAULT_SIM_MIN_SHARES),
   simHoldHours: parseFloatEnv(process.env.SIM_HOLD_HOURS, DEFAULT_SIM_HOLD_HOURS),
 };

@@ -99,8 +99,17 @@ export class SimulatedTradeService {
     }
 
     const portfolio = await this.getPortfolio();
-    const confidenceMultiplier = likelihood !== null ? Math.max(0.2, Math.min(1, likelihood)) : 0.5;
-    const stake = Math.min(portfolio.balance * SIGNAL_CONFIG.simStakePct * confidenceMultiplier * 2, SIGNAL_CONFIG.simMaxStakeUsd);
+
+    // Stake scales with how confident the LLM actually is in the side it
+    // chose (0.5 = just barely qualified, 1.0 = fully confident), between a
+    // floor (enough to buy simMinShares) and a hard per-trade ceiling — not
+    // a percentage of account balance, so position size doesn't balloon as
+    // the balance grows.
+    const sideConfidence = action === 'buy_yes' ? (likelihood ?? 0.5) : 1 - (likelihood ?? 0.5);
+    const confidenceScale = Math.max(0, Math.min(1, (sideConfidence - 0.5) * 2));
+    const minStake = SIGNAL_CONFIG.simMinShares * entryPrice;
+    const maxStake = SIGNAL_CONFIG.simMaxStakeUsd;
+    const stake = Math.max(minStake, Math.min(maxStake, minStake + (maxStake - minStake) * confidenceScale));
     if (stake <= 0 || stake > portfolio.balance) return;
 
     const shares = stake / entryPrice;

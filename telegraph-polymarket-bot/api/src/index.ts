@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRoutes from './routes/api.routes';
-import { initScraperCron } from './cron/scraper.cron';
+import { telegraphSignalService } from './services/telegraph-signal.service';
 
 dotenv.config();
 
@@ -20,5 +20,5 @@ app.listen(port, () => {
   console.log(`🔗 Health check: http://localhost:${port}/api/health`);
 });
 
-// Start background cron jobs
-initScraperCron();
+// Start the Telegraph signal WebSocket subscription
+telegraphSignalService.start();

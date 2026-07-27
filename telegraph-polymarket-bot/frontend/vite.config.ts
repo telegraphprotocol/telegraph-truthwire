@@ -16,6 +16,6 @@ export default defineConfig({
     },
   },
   preview: {
-    allowedHosts: ['polymarket.telegraphprotocol.com'],
+    allowedHosts: ['supersignal.telegraphprotocol.com'],
   },
 })

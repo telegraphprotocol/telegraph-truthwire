@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import prisma from '../utils/prisma';
 import { PolymarketService } from '../services/polymarket.service';
 import { MARKET_MONITOR_CONFIG } from '../config/market-monitor.config';
+import { SIGNAL_CONFIG } from '../config/signal.config';
 import { SimulatedTradeService } from '../services/simulated-trade.service';
 import { SignalPipelineService } from '../services/signal-pipeline.service';
 import { normalizeIncomingSignal } from '../services/telegraph-signal.service';
@@ -117,6 +118,7 @@ export const getPortfolio = async (_req: Request, res: Response) => {
     const portfolio = await SimulatedTradeService.getPortfolio();
     const openCount = await prisma.simulatedTrade.count({ where: { status: 'open' } });
     res.json({
+      startingBalance: SIGNAL_CONFIG.simStartingBalanceUsd,
       balance: portfolio.balance,
       totalPnl: portfolio.totalPnl,
       openPositions: openCount,

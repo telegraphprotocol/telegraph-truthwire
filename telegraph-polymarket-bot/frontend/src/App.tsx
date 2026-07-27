@@ -46,6 +46,7 @@ interface Trade {
 }
 
 interface Portfolio {
+  startingBalance: number
   balance: number
   totalPnl: number
   openPositions: number
@@ -120,7 +121,7 @@ function App() {
   }, [refreshTrades])
 
   const totalPnl = portfolio?.totalPnl ?? 0
-  const startingBalance = portfolio ? portfolio.balance - totalPnl : null
+  const startingBalance = portfolio?.startingBalance ?? null
 
   return (
     <div className="app-container">

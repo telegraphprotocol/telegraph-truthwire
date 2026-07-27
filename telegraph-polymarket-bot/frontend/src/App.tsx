@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Activity, Radio, ShoppingCart, TrendingUp } from 'lucide-react'
+import { Activity, Radio, ShoppingCart, TrendingUp, HelpCircle, Sun, Moon, X } from 'lucide-react'
 import api from './utils/api'
 import './App.css'
+
+type Theme = 'dark' | 'light'
+const THEME_STORAGE_KEY = 'supersignal-theme'
 
 type Accent = 'info' | 'success' | 'warning' | 'danger'
 
@@ -75,6 +78,13 @@ function App() {
   const [tradePage, setTradePage] = useState(1)
   const [tradeTotalPages, setTradeTotalPages] = useState(1)
   const [isLive, setIsLive] = useState(false)
+  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(THEME_STORAGE_KEY) as Theme) || 'dark')
+  const [showHowItWorks, setShowHowItWorks] = useState(false)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem(THEME_STORAGE_KEY, theme)
+  }, [theme])
 
   const refreshSignals = useCallback(async () => {
     try {
@@ -138,10 +148,44 @@ function App() {
             <span className="powered-by">Powered by Telegraph</span>
           </div>
         </div>
-        <span className={`status-pill ${isLive ? 'live' : 'idle'}`}>
-          <span className="status-dot" />
-          {isLive ? 'Live' : 'Connecting'}
-        </span>
+        <div className="header-actions">
+          <span className={`status-pill ${isLive ? 'live' : 'idle'}`}>
+            <span className="status-dot" />
+            {isLive ? 'Live' : 'Connecting'}
+          </span>
+          <div className="header-tooltip-wrap">
+            <button
+              className="icon-btn"
+              onClick={() => setShowHowItWorks((v) => !v)}
+              aria-label="How it works"
+            >
+              <HelpCircle size={16} />
+            </button>
+            {showHowItWorks && (
+              <div className="how-it-works-popover glass-card">
+                <div className="how-it-works-header">
+                  <span>How SuperSignal Works</span>
+                  <button className="icon-btn" onClick={() => setShowHowItWorks(false)} aria-label="Close">
+                    <X size={14} />
+                  </button>
+                </div>
+                <ol className="how-it-works-list">
+                  <li><strong>Listen.</strong> A persistent WebSocket connection to the Telegraph node streams live prediction signals in real time as they're generated.</li>
+                  <li><strong>Match.</strong> Each signal's question is searched against live Polymarket markets, and an LLM confirms which currently open market — if any — actually corresponds to it, filtering out stale or already-resolved lookalikes.</li>
+                  <li><strong>Decide.</strong> A second LLM call weighs the matched market's live YES/NO prices against the signal and decides to buy YES, buy NO, or wait, based on its estimated likelihood.</li>
+                  <li><strong>Trade.</strong> When a trade is triggered, a simulated position opens — paper trading only, no real funds — sized to the LLM's confidence within fixed risk limits, and P&L updates live against the market price until the position closes.</li>
+                </ol>
+              </div>
+            )}
+          </div>
+          <button
+            className="icon-btn"
+            onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+        </div>
       </header>
 
       <main className="main-content">

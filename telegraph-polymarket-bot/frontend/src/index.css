@@ -18,6 +18,25 @@
   --radius: 0.375rem;
 }
 
+:root[data-theme="light"] {
+  --background: #f4f4f2;
+  --foreground: #14151a;
+  --dot-grid-color: rgba(0, 0, 0, 0.12);
+  --card: rgba(0, 0, 0, 0.045);
+  --border: rgba(0, 0, 0, 0.16);
+  --border-subtle: rgba(0, 0, 0, 0.09);
+  --muted-foreground: rgba(20, 21, 26, 0.68);
+  --muted-foreground-2: rgba(20, 21, 26, 0.48);
+  --info: rgba(30, 100, 220, 0.95);
+  --info-dim: rgba(30, 100, 220, 0.1);
+  --success: rgba(20, 140, 80, 0.95);
+  --success-dim: rgba(20, 140, 80, 0.1);
+  --warning: rgba(180, 120, 0, 0.95);
+  --warning-dim: rgba(180, 120, 0, 0.1);
+  --danger: rgba(200, 40, 40, 0.95);
+  --danger-dim: rgba(200, 40, 40, 0.1);
+}
+
 * {
   margin: 0;
   padding: 0;

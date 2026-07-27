@@ -162,20 +162,23 @@ function App() {
               <HelpCircle size={16} />
             </button>
             {showHowItWorks && (
-              <div className="how-it-works-popover glass-card">
-                <div className="how-it-works-header">
-                  <span>How SuperSignal Works</span>
-                  <button className="icon-btn" onClick={() => setShowHowItWorks(false)} aria-label="Close">
-                    <X size={14} />
-                  </button>
+              <>
+                <div className="how-it-works-backdrop" onClick={() => setShowHowItWorks(false)} />
+                <div className="how-it-works-popover">
+                  <div className="how-it-works-header">
+                    <span>How SuperSignal Works</span>
+                    <button className="icon-btn" onClick={() => setShowHowItWorks(false)} aria-label="Close">
+                      <X size={14} />
+                    </button>
+                  </div>
+                  <ol className="how-it-works-list">
+                    <li><strong>Listen.</strong> A persistent WebSocket connection to the Telegraph node streams live prediction signals in real time as they're generated.</li>
+                    <li><strong>Match.</strong> Each signal's question is searched against live Polymarket markets, and an LLM confirms which currently open market — if any — actually corresponds to it, filtering out stale or already-resolved lookalikes.</li>
+                    <li><strong>Decide.</strong> A second LLM call weighs the matched market's live YES/NO prices against the signal and decides to buy YES, buy NO, or wait, based on its estimated likelihood.</li>
+                    <li><strong>Trade.</strong> When a trade is triggered, a simulated position opens — paper trading only, no real funds — sized to the LLM's confidence within fixed risk limits, and P&L updates live against the market price until the position closes.</li>
+                  </ol>
                 </div>
-                <ol className="how-it-works-list">
-                  <li><strong>Listen.</strong> A persistent WebSocket connection to the Telegraph node streams live prediction signals in real time as they're generated.</li>
-                  <li><strong>Match.</strong> Each signal's question is searched against live Polymarket markets, and an LLM confirms which currently open market — if any — actually corresponds to it, filtering out stale or already-resolved lookalikes.</li>
-                  <li><strong>Decide.</strong> A second LLM call weighs the matched market's live YES/NO prices against the signal and decides to buy YES, buy NO, or wait, based on its estimated likelihood.</li>
-                  <li><strong>Trade.</strong> When a trade is triggered, a simulated position opens — paper trading only, no real funds — sized to the LLM's confidence within fixed risk limits, and P&L updates live against the market price until the position closes.</li>
-                </ol>
-              </div>
+              </>
             )}
           </div>
           <button

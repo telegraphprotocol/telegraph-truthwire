@@ -70,20 +70,23 @@ function App() {
   const [signals, setSignals] = useState<Signal[]>([])
   const [trades, setTrades] = useState<Trade[]>([])
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null)
+  const [signalPage, setSignalPage] = useState(1)
+  const [signalTotalPages, setSignalTotalPages] = useState(1)
   const [tradePage, setTradePage] = useState(1)
   const [tradeTotalPages, setTradeTotalPages] = useState(1)
   const [isLive, setIsLive] = useState(false)
 
   const refreshSignals = useCallback(async () => {
     try {
-      const { data } = await api.get('/signals', { params: { limit: 30 } })
+      const { data } = await api.get('/signals', { params: { page: signalPage, limit: 10 } })
       setSignals(Array.isArray(data?.items) ? data.items : [])
+      setSignalTotalPages(Math.max(1, Number(data?.totalPages) || 1))
       setIsLive(true)
     } catch (error) {
       console.error('Failed to load signals:', error)
       setIsLive(false)
     }
-  }, [])
+  }, [signalPage])
 
   const refreshTrades = useCallback(async () => {
     try {
@@ -131,7 +134,7 @@ function App() {
         <div className="logo-section">
           <Radio size={20} color="var(--foreground)" />
           <div className="logo-group">
-            <span className="logo-text">SNIPER SIGNAL</span>
+            <span className="logo-text">SUPERSIGNAL</span>
             <span className="powered-by">Powered by Telegraph</span>
           </div>
         </div>
@@ -226,6 +229,24 @@ function App() {
                 )
               })}
             </div>
+
+            <div className="pagination">
+              <button
+                className="pagination-btn"
+                onClick={() => setSignalPage((p) => Math.max(1, p - 1))}
+                disabled={signalPage <= 1}
+              >
+                Prev
+              </button>
+              <span>Page {signalPage} / {signalTotalPages}</span>
+              <button
+                className="pagination-btn"
+                onClick={() => setSignalPage((p) => Math.min(signalTotalPages, p + 1))}
+                disabled={signalPage >= signalTotalPages}
+              >
+                Next
+              </button>
+            </div>
           </div>
 
           <div className="panel glass-card">
@@ -305,7 +326,7 @@ function App() {
       </main>
 
       <footer className="footer">
-        <span>© 2026 Sniper Signal — simulated trading demo</span>
+        <span>© 2026 SuperSignal — simulated trading demo</span>
         <span>Built on the Telegraph Network</span>
       </footer>
     </div>

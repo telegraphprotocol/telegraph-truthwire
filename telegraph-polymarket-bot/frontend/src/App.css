@@ -335,6 +335,12 @@
   color: var(--muted-foreground-2);
 }
 
+.trade-fill-summary {
+  margin-top: 4px;
+  font-size: 0.68rem;
+  color: var(--muted-foreground);
+}
+
 .trade-pnl {
   font-weight: 700;
   font-variant-numeric: tabular-nums;

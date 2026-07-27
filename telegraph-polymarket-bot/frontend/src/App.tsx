@@ -36,7 +36,10 @@ interface Trade {
   entryPrice: number
   exitPrice: number | null
   stake: number
+  shares: number
   pnl: number | null
+  currentPrice: number | null
+  unrealizedPnl: number | null
   status: 'open' | 'closed'
   openedAt: string
   closedAt: string | null
@@ -248,20 +251,32 @@ function App() {
                     </span>
                   </div>
                   <div className="trade-market-title" title={trade.marketTitle}>{trade.marketTitle}</div>
-                  <div className="trade-meta-row">
-                    <span>Stake ${money(trade.stake)}</span>
-                    <span>Entry {trade.entryPrice.toFixed(2)}</span>
+                  <div className="trade-fill-summary">
+                    Bought {trade.shares.toFixed(2)} shares @ {(trade.entryPrice * 100).toFixed(1)}¢ for ${money(trade.stake)}
                   </div>
+                  {trade.status === 'closed' && trade.exitPrice !== null && (
+                    <div className="trade-fill-summary">
+                      Sold at {(trade.exitPrice * 100).toFixed(1)}¢
+                    </div>
+                  )}
+                  {trade.status === 'open' && trade.currentPrice !== null && (
+                    <div className="trade-fill-summary">
+                      Now trading at {(trade.currentPrice * 100).toFixed(1)}¢
+                    </div>
+                  )}
                   <div className="trade-meta-row">
                     <span>{trade.status === 'open' ? timeAgo(trade.openedAt) : `closed ${timeAgo(trade.closedAt || trade.openedAt)}`}</span>
-                    {trade.pnl !== null ? (
-                      <span className={`trade-pnl ${trade.pnl >= 0 ? 'success' : 'danger'}`} style={{ color: trade.pnl >= 0 ? 'var(--success)' : 'var(--danger)' }}>
-                        <TrendingUp size={11} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 3 }} />
-                        {trade.pnl >= 0 ? '+' : ''}${money(trade.pnl)}
-                      </span>
-                    ) : (
-                      <span>—</span>
-                    )}
+                    {(() => {
+                      const displayPnl = trade.status === 'closed' ? trade.pnl : trade.unrealizedPnl
+                      if (displayPnl === null) return <span>—</span>
+                      return (
+                        <span className={`trade-pnl ${displayPnl >= 0 ? 'success' : 'danger'}`} style={{ color: displayPnl >= 0 ? 'var(--success)' : 'var(--danger)' }}>
+                          <TrendingUp size={11} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 3 }} />
+                          {displayPnl >= 0 ? '+' : ''}${money(displayPnl)}
+                          {trade.status === 'open' && ' (unrealized)'}
+                        </span>
+                      )
+                    })()}
                   </div>
                 </div>
               ))}

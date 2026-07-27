@@ -61,10 +61,12 @@ export const getTrades = async (req: Request, res: Response) => {
     const where: Prisma.SimulatedTradeWhereInput =
       statusQuery === 'open' || statusQuery === 'closed' ? { status: statusQuery } : {};
 
-    const [items, total] = await Promise.all([
+    const [rows, total] = await Promise.all([
       prisma.simulatedTrade.findMany({ where, skip, take: limit, orderBy: { openedAt: 'desc' } }),
       prisma.simulatedTrade.count({ where }),
     ]);
+
+    const items = await SimulatedTradeService.withLiveQuotes(rows);
 
     res.json({ items, page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) });
   } catch (error: any) {

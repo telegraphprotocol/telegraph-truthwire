@@ -51,6 +51,7 @@ model SimulatedTrade {
   entryPrice    Float
   exitPrice     Float?
   stake         Float
+  shares        Float
   pnl           Float?
   status        TradeStatus @default(open)
   openedAt      DateTime    @default(now())

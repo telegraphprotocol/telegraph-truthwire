@@ -21,6 +21,8 @@ model Signal {
   matchedNoPrice     String?
   matchedMarketUrl   String?
   decisionAction     String?
+  decisionReason     String?
+  matchReason        String?
   likelihood         Float?
   trades             SimulatedTrade[]
   createdAt          DateTime        @default(now())

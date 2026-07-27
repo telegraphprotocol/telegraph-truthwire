@@ -49,14 +49,37 @@ export class TradeDecisionService {
     ].join('\n');
 
     const parsed = await callLlmJson(SYSTEM_PROMPT, userPrompt);
-    if (!parsed) return fallback('LLM call failed');
+    if (!parsed) {
+      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — LLM call failed`);
+      return fallback('LLM call failed');
+    }
 
-    const action = normalizeAction(parsed.action);
-    if (!action) return fallback('LLM returned an invalid action');
+    let action = normalizeAction(parsed.action);
+    if (!action) {
+      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — invalid action from LLM: ${JSON.stringify(parsed.action)}`);
+      return fallback('LLM returned an invalid action');
+    }
 
     const likelihoodRaw = Number(parsed.likelihood);
     const likelihood = Number.isFinite(likelihoodRaw) ? Math.max(0, Math.min(1, likelihoodRaw)) : 0;
-    const reason = typeof parsed.reason === 'string' && parsed.reason.trim() ? parsed.reason.trim() : 'No reason provided by LLM';
+    let reason = typeof parsed.reason === 'string' && parsed.reason.trim() ? parsed.reason.trim() : 'No reason provided by LLM';
+
+    // Guard against self-contradictory output — e.g. buy_yes with a likelihood
+    // well below 0.5 doesn't match the "believe YES is likely" rule the prompt
+    // asked for. This isn't intentional value-betting (the prompt never asked
+    // for that), so treat it as an LLM error and fail safe to wait rather than
+    // silently trusting it.
+    if (action === 'buy_yes' && likelihood < 0.5) {
+      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — inconsistent: buy_yes with likelihood=${likelihood}, forcing wait. Original reason: ${reason}`);
+      action = 'wait';
+      reason = `Overridden to wait: LLM chose buy_yes but its own likelihood (${likelihood}) was below 0.5. Original reason: ${reason}`;
+    } else if (action === 'buy_no' && likelihood > 0.5) {
+      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — inconsistent: buy_no with likelihood=${likelihood}, forcing wait. Original reason: ${reason}`);
+      action = 'wait';
+      reason = `Overridden to wait: LLM chose buy_no but its own likelihood (${likelihood}) was above 0.5. Original reason: ${reason}`;
+    } else {
+      console.log(`[trade-decision] signal ${signal.id} market="${market.title}" — action=${action} likelihood=${likelihood} reason=${reason}`);
+    }
 
     return { action, likelihood, reason };
   }

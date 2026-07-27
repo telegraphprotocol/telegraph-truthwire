@@ -45,7 +45,8 @@ export class MarketMatcherService {
       return null;
     }
 
-    console.log(`[market-matcher] signal ${signal.id} matched "${candidates[matchIndex].title}" — reason=${parsed?.reason ?? 'n/a'}`);
-    return PolymarketService.formatMarketSummary(candidates[matchIndex]);
+    const reason = typeof parsed?.reason === 'string' && parsed.reason.trim() ? parsed.reason.trim() : 'No reason provided by LLM';
+    console.log(`[market-matcher] signal ${signal.id} matched "${candidates[matchIndex].title}" — reason=${reason}`);
+    return { ...PolymarketService.formatMarketSummary(candidates[matchIndex]), matchReason: reason };
   }
 }

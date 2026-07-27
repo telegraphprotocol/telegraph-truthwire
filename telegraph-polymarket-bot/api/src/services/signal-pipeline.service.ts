@@ -61,7 +61,9 @@ export class SignalPipelineService {
         matchedYesPrice: match?.yesPrice ?? null,
         matchedNoPrice: match?.noPrice ?? null,
         matchedMarketUrl: match?.url ?? null,
+        matchReason: match?.matchReason ?? null,
         decisionAction: decision?.action ?? null,
+        decisionReason: decision?.reason ?? null,
         likelihood: decision?.likelihood ?? null,
       },
     });

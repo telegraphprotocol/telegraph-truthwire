@@ -8,5 +8,6 @@ router.get('/polymarket/search', signalsController.searchMarkets);
 router.get('/signals', signalsController.getSignals);
 router.get('/trades', signalsController.getTrades);
 router.get('/portfolio', signalsController.getPortfolio);
+router.post('/test/signal', signalsController.simulateSignal);
 
 export default router;

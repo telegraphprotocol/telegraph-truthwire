@@ -48,6 +48,15 @@ const normalizeResultMessage = (msg: any): NormalizedSignal => {
   };
 };
 
+// Shared entry point for both the live WS handler and the test-signal
+// endpoint, so a simulated signal goes through the exact same normalization
+// the real socket traffic does. Returns null for the "result" envelope's
+// list_subscriptions reply, which isn't an actual signal.
+export const normalizeIncomingSignal = (msg: any): NormalizedSignal | null => {
+  if (msg.type === 'result' && Array.isArray(msg.data?.subscriptions)) return null;
+  return msg.type === 'result' ? normalizeResultMessage(msg) : normalizeDaemonMessage(msg);
+};
+
 const RECONNECT_DELAY_MS = 5000;
 const PING_INTERVAL_MS = 30000;
 const AUTH_TIMEOUT_MS = 15000;
@@ -146,13 +155,13 @@ export class TelegraphSignalService {
       // that shape has to be checked for first.
       case 'daemon':
       case 'result': {
-        if (msg.type === 'result' && Array.isArray(msg.data?.subscriptions)) {
+        const normalized = normalizeIncomingSignal(msg);
+        if (!normalized) {
           console.log('[telegraph-signal] active subscriptions:', JSON.stringify(msg.data));
           this.resolveSubscriptionsList(msg.data.subscriptions);
           break;
         }
 
-        const normalized = msg.type === 'result' ? normalizeResultMessage(msg) : normalizeDaemonMessage(msg);
         console.log(
           `[telegraph-signal] SIGNAL id=${normalized.id} intent=${normalized.intent} question="${normalized.questionText}"`
         );

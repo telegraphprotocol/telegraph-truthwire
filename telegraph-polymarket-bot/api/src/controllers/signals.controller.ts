@@ -4,6 +4,8 @@ import prisma from '../utils/prisma';
 import { PolymarketService } from '../services/polymarket.service';
 import { MARKET_MONITOR_CONFIG } from '../config/market-monitor.config';
 import { SimulatedTradeService } from '../services/simulated-trade.service';
+import { SignalPipelineService } from '../services/signal-pipeline.service';
+import { normalizeIncomingSignal } from '../services/telegraph-signal.service';
 
 export const searchMarkets = async (req: Request, res: Response) => {
   try {
@@ -55,6 +57,44 @@ export const getTrades = async (req: Request, res: Response) => {
     res.json({ items, page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) });
   } catch (error: any) {
     res.status(500).json({ error: error.message || 'Failed to load trades' });
+  }
+};
+
+// Test-only endpoint: feeds a signal through the exact same normalization
+// and pipeline (MarketMatcherService -> TradeDecisionService -> simulated
+// trade) that the live Telegraph WS handler uses, without needing a real
+// socket push. Accepts either a raw WS envelope (the real "daemon"/"result"
+// wire shapes — pass a `type` field to use this path) or a shorthand
+// { intent, questionText, category? } body for quick manual testing.
+export const simulateSignal = async (req: Request, res: Response) => {
+  try {
+    const body = req.body || {};
+
+    const normalized = body.type
+      ? normalizeIncomingSignal(body)
+      : {
+          id: `test-${Date.now()}`,
+          intent: body.intent || 'TEST_SIGNAL',
+          category: body.category ?? null,
+          questionText: body.questionText || '',
+          routingSubnet: body.routingSubnet ?? null,
+          execution: body.execution || {},
+          raw: body,
+        };
+
+    if (!normalized) {
+      return res.status(400).json({ error: 'Payload looked like a list_subscriptions reply, not a signal' });
+    }
+    if (!normalized.questionText.trim()) {
+      return res.status(400).json({ error: 'questionText is required (either top-level or under question.text/data.question)' });
+    }
+
+    await SignalPipelineService.handleSignal(normalized);
+
+    const signalRow = await prisma.signal.findUnique({ where: { telegraphId: normalized.id } });
+    res.json({ normalized, signal: signalRow });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || 'Failed to simulate signal' });
   }
 };
 

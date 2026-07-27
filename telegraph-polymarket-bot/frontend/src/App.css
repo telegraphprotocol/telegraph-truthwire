@@ -242,12 +242,6 @@
   flex-shrink: 0;
 }
 
-.no-match {
-  font-size: 0.68rem;
-  color: var(--muted-foreground-2);
-  font-style: italic;
-}
-
 .signal-decision-line {
   margin-top: 8px;
   display: flex;

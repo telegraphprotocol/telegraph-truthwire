@@ -201,7 +201,7 @@ function App() {
                       <span className={`pill ${decisionPillClass}`}>{signal.decisionLabel}</span>
                       {pct !== null && <span className="pill neutral">{pct}% likely</span>}
                     </div>
-                    {signal.matchedMarketTitle ? (
+                    {signal.matchedMarketTitle && (
                       <div className="signal-market-line">
                         <a
                           className="signal-market-title"
@@ -216,8 +216,6 @@ function App() {
                           <span className="pill danger">NO {signal.matchedNoPrice}</span>
                         </div>
                       </div>
-                    ) : (
-                      <div className="no-match">No matching Polymarket market found</div>
                     )}
                     {(signal.matchReason || signal.decisionReason) && (
                       <div className="signal-reasoning">

@@ -7,6 +7,16 @@ import { SimulatedTradeService } from '../services/simulated-trade.service';
 import { SignalPipelineService } from '../services/signal-pipeline.service';
 import { normalizeIncomingSignal } from '../services/telegraph-signal.service';
 
+// Human-readable label so a decision is obvious in an API response even when
+// it's WAIT or there was no market match at all — decisionAction is null in
+// both of those cases, which reads ambiguously as raw JSON otherwise.
+const decisionLabel = (signalRow: { matchedMarketTitle: string | null; decisionAction: string | null } | null): string => {
+  if (!signalRow?.matchedMarketTitle) return 'NO MARKET MATCH';
+  if (signalRow.decisionAction === 'buy_yes') return 'BUY YES';
+  if (signalRow.decisionAction === 'buy_no') return 'BUY NO';
+  return 'WAIT';
+};
+
 export const searchMarkets = async (req: Request, res: Response) => {
   try {
     const { q } = req.query;
@@ -29,10 +39,12 @@ export const getSignals = async (req: Request, res: Response) => {
 
     const where: Prisma.SignalWhereInput = { intent: { not: 'UNKNOWN' } };
 
-    const [items, total] = await Promise.all([
+    const [rows, total] = await Promise.all([
       prisma.signal.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' } }),
       prisma.signal.count({ where }),
     ]);
+
+    const items = rows.map((row) => ({ ...row, decisionLabel: decisionLabel(row) }));
 
     res.json({ items, page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) });
   } catch (error: any) {
@@ -92,7 +104,7 @@ export const simulateSignal = async (req: Request, res: Response) => {
     await SignalPipelineService.handleSignal(normalized);
 
     const signalRow = await prisma.signal.findUnique({ where: { telegraphId: normalized.id } });
-    res.json({ normalized, signal: signalRow });
+    res.json({ normalized, decision: decisionLabel(signalRow), signal: signalRow });
   } catch (error: any) {
     res.status(500).json({ error: error.message || 'Failed to simulate signal' });
   }

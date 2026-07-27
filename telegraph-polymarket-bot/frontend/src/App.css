@@ -248,6 +248,35 @@
   font-style: italic;
 }
 
+.signal-decision-line {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.signal-reasoning {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+.signal-reasoning p {
+  margin: 0;
+}
+
+.signal-reasoning p + p {
+  margin-top: 4px;
+}
+
+.signal-reasoning strong {
+  color: var(--muted-foreground-2);
+  font-weight: 700;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;

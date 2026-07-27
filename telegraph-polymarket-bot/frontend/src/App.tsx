@@ -21,7 +21,10 @@ interface Signal {
   matchedYesPrice: string | null
   matchedNoPrice: string | null
   matchedMarketUrl: string | null
+  matchReason: string | null
   decisionAction: string | null
+  decisionReason: string | null
+  decisionLabel: string
   likelihood: number | null
   createdAt: string
 }
@@ -161,7 +164,7 @@ function App() {
             <div className="panel-header">
               <div className="panel-title">
                 <Activity size={16} color="var(--foreground)" />
-                Signal Feed
+                Decision History
               </div>
               <span className="source-tag">Telegraph Daemon</span>
             </div>
@@ -173,6 +176,10 @@ function App() {
               {signals.map((signal) => {
                 const accent = accentFor(signal.intent)
                 const pct = signal.likelihood !== null ? Math.round(signal.likelihood * 100) : null
+                const decisionPillClass =
+                  signal.decisionLabel === 'BUY YES' ? 'success' :
+                  signal.decisionLabel === 'BUY NO' ? 'danger' :
+                  signal.decisionLabel === 'WAIT' ? 'warning' : 'neutral'
                 return (
                   <div key={signal.id} className="signal-row signal-row-in">
                     <div className={`signal-row-accent pill ${accent}`} style={{ background: `var(--${accent})` }} />
@@ -183,6 +190,10 @@ function App() {
                       <span className="signal-time">{timeAgo(signal.createdAt)}</span>
                     </div>
                     <p className="signal-question">{signal.questionText}</p>
+                    <div className="signal-decision-line">
+                      <span className={`pill ${decisionPillClass}`}>{signal.decisionLabel}</span>
+                      {pct !== null && <span className="pill neutral">{pct}% likely</span>}
+                    </div>
                     {signal.matchedMarketTitle ? (
                       <div className="signal-market-line">
                         <a
@@ -196,11 +207,16 @@ function App() {
                         <div className="signal-market-prices">
                           <span className="pill success">YES {signal.matchedYesPrice}</span>
                           <span className="pill danger">NO {signal.matchedNoPrice}</span>
-                          {pct !== null && <span className="pill neutral">{pct}%</span>}
                         </div>
                       </div>
                     ) : (
                       <div className="no-match">No matching Polymarket market found</div>
+                    )}
+                    {(signal.matchReason || signal.decisionReason) && (
+                      <div className="signal-reasoning">
+                        {signal.matchReason && <p><strong>Match:</strong> {signal.matchReason}</p>}
+                        {signal.decisionReason && <p><strong>Decision:</strong> {signal.decisionReason}</p>}
+                      </div>
                     )}
                   </div>
                 )

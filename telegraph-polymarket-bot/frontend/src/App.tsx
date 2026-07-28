@@ -162,9 +162,8 @@ function App() {
               <HelpCircle size={16} />
             </button>
             {showHowItWorks && (
-              <>
-                <div className="how-it-works-backdrop" onClick={() => setShowHowItWorks(false)} />
-                <div className="how-it-works-popover">
+              <div className="how-it-works-backdrop" onClick={() => setShowHowItWorks(false)}>
+                <div className="how-it-works-popover" onClick={(e) => e.stopPropagation()}>
                   <div className="how-it-works-header">
                     <span>How SuperSignal Works</span>
                     <button className="icon-btn" onClick={() => setShowHowItWorks(false)} aria-label="Close">
@@ -190,7 +189,7 @@ function App() {
                     </li>
                   </ol>
                 </div>
-              </>
+              </div>
             )}
           </div>
           <button

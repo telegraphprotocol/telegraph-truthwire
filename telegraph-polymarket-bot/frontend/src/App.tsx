@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Activity, Radio, ShoppingCart, TrendingUp, HelpCircle, Sun, Moon, X } from 'lucide-react'
+import { Activity, ShoppingCart, TrendingUp, HelpCircle, Sun, Moon, X } from 'lucide-react'
 import api from './utils/api'
 import './App.css'
 
@@ -142,7 +142,7 @@ function App() {
 
       <header className="header">
         <div className="logo-section">
-          <Radio size={20} color="var(--foreground)" />
+          <img src="/supersignal-favicon.svg" alt="" width={22} height={22} className="logo-icon" />
           <div className="logo-group">
             <span className="logo-text">SUPERSIGNAL</span>
             <span className="powered-by">Powered by Telegraph</span>
@@ -317,11 +317,13 @@ function App() {
               {trades.length === 0 && (
                 <div className="empty-state">No simulated trades yet. Waiting for a matched signal.</div>
               )}
-              {trades.map((trade) => (
+              {trades.map((trade) => {
+                const outcome = trade.side === 'BUY' ? 'YES' : 'NO'
+                return (
                 <div key={trade.id} className="trade-item">
                   <div className="trade-item-top">
                     <span className={`pill ${trade.side === 'BUY' ? 'success' : 'danger'}`}>
-                      {trade.side}
+                      BUY {outcome}
                     </span>
                     <span className={`pill ${trade.status === 'open' ? 'info' : 'neutral'}`}>
                       {trade.status === 'open' ? 'OPEN' : 'CLOSED'}
@@ -329,11 +331,11 @@ function App() {
                   </div>
                   <div className="trade-market-title" title={trade.marketTitle}>{trade.marketTitle}</div>
                   <div className="trade-fill-summary">
-                    Bought {trade.shares.toFixed(2)} shares @ {(trade.entryPrice * 100).toFixed(1)}¢ for ${money(trade.stake)}
+                    Bought {trade.shares.toFixed(2)} {outcome} shares @ {(trade.entryPrice * 100).toFixed(1)}¢ for ${money(trade.stake)}
                   </div>
                   {trade.status === 'closed' && trade.exitPrice !== null && (
                     <div className="trade-fill-summary">
-                      Sold at {(trade.exitPrice * 100).toFixed(1)}¢
+                      Closed out at {(trade.exitPrice * 100).toFixed(1)}¢
                     </div>
                   )}
                   {trade.status === 'open' && trade.currentPrice !== null && (
@@ -356,7 +358,7 @@ function App() {
                     })()}
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
 
             <div className="pagination">

@@ -34,6 +34,12 @@
   gap: 10px;
 }
 
+.logo-icon {
+  display: block;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
 .logo-group {
   display: flex;
   flex-direction: column;

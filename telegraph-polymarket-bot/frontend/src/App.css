@@ -90,10 +90,6 @@
   gap: 8px;
 }
 
-.header-tooltip-wrap {
-  position: relative;
-}
-
 .icon-btn {
   display: inline-flex;
   align-items: center;

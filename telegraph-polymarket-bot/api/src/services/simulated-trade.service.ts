@@ -95,7 +95,8 @@ export class SimulatedTradeService {
         console.log(`[simulated-trade] contradicting signal on "${market.title}" but couldn't price the existing ${existingPosition.side} position — leaving it open`);
         return;
       }
-      await this.settleTrade(existingPosition, existingExitPrice, `contradicting signal — new decision is ${action}`);
+      const newSideLabel = action === 'buy_yes' ? 'BUY YES' : 'BUY NO';
+      await this.settleTrade(existingPosition, existingExitPrice, `A new signal recommended ${newSideLabel}, which contradicts this position, so it was closed out`);
     }
 
     const portfolio = await this.getPortfolio();
@@ -137,18 +138,24 @@ export class SimulatedTradeService {
     console.log(`[simulated-trade] opened ${side} on "${market.title}" @ ${entryPrice} — ${shares.toFixed(2)} shares, stake=$${stake.toFixed(2)}`);
   }
 
+  // No time-based exit — a position stays open indefinitely and is only
+  // settled once Polymarket itself has actually resolved/closed the market
+  // (i.e. there's a real final price, not just an arbitrary point in time
+  // where the price happens to be unchanged from entry).
   static async reviewOpenTrades() {
-    const holdMs = SIGNAL_CONFIG.simHoldHours * 60 * 60 * 1000;
-    const cutoff = new Date(Date.now() - holdMs);
-
-    const openTrades = await prisma.simulatedTrade.findMany({
-      where: { status: 'open', openedAt: { lte: cutoff } },
-    });
+    const openTrades = await prisma.simulatedTrade.findMany({ where: { status: 'open' } });
 
     for (const trade of openTrades) {
-      const exitPrice = await getCurrentPrice(trade);
+      const markets = await PolymarketService.searchTopMarkets(trade.marketTitle, 1);
+      const event = markets[0];
+      if (!event) continue;
+
+      const summary = PolymarketService.formatMarketSummary(event as any);
+      if (summary.active) continue; // still open on Polymarket — keep holding
+
+      const exitPrice = trade.side === 'BUY' ? parseCentsToPrice(summary.yesPrice) : parseCentsToPrice(summary.noPrice);
       if (exitPrice === null) continue;
-      await this.settleTrade(trade, exitPrice, 'hold period elapsed');
+      await this.settleTrade(trade, exitPrice, 'Market resolved/closed on Polymarket');
     }
   }
 

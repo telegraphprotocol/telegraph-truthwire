@@ -11,7 +11,6 @@ const DEFAULT_INTENTS = [
 const DEFAULT_SIM_STARTING_BALANCE_USD = 1000;
 const DEFAULT_SIM_MAX_STAKE_USD = 10;
 const DEFAULT_SIM_MIN_SHARES = 10;
-const DEFAULT_SIM_HOLD_HOURS = 6;
 
 const parseList = (raw?: string, fallback: string[] = []) => {
   if (!raw) return fallback;
@@ -34,5 +33,4 @@ export const SIGNAL_CONFIG = {
   simStartingBalanceUsd: parseFloatEnv(process.env.SIM_STARTING_BALANCE_USD, DEFAULT_SIM_STARTING_BALANCE_USD),
   simMaxStakeUsd: parseFloatEnv(process.env.SIM_MAX_STAKE_USD, DEFAULT_SIM_MAX_STAKE_USD),
   simMinShares: parseFloatEnv(process.env.SIM_MIN_SHARES, DEFAULT_SIM_MIN_SHARES),
-  simHoldHours: parseFloatEnv(process.env.SIM_HOLD_HOURS, DEFAULT_SIM_HOLD_HOURS),
 };

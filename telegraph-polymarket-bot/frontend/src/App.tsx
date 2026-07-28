@@ -171,11 +171,23 @@ function App() {
                       <X size={14} />
                     </button>
                   </div>
+                  <p className="how-it-works-intro">SuperSignal watches for real-world news events and automatically paper-trades them on Polymarket. Here's the exact pipeline, step by step:</p>
                   <ol className="how-it-works-list">
-                    <li><strong>Listen.</strong> A persistent WebSocket connection to the Telegraph node streams live prediction signals in real time as they're generated.</li>
-                    <li><strong>Match.</strong> Each signal's question is searched against live Polymarket markets, and an LLM confirms which currently open market — if any — actually corresponds to it, filtering out stale or already-resolved lookalikes.</li>
-                    <li><strong>Decide.</strong> A second LLM call weighs the matched market's live YES/NO prices against the signal and decides to buy YES, buy NO, or wait, based on its estimated likelihood.</li>
-                    <li><strong>Trade.</strong> When a trade is triggered, a simulated position opens — paper trading only, no real funds — sized to the LLM's confidence within fixed risk limits, and P&L updates live against the market price until the position closes.</li>
+                    <li>
+                      <strong>1. A live signal arrives.</strong> We keep an always-on WebSocket connection open to a Telegraph node. The moment it detects a newsworthy event (e.g. "Will the Fed cut rates in January?"), it pushes that question to us instantly — no polling, no delay.
+                    </li>
+                    <li>
+                      <strong>2. We search Polymarket for a matching market.</strong> We take the signal's question and search it against Polymarket's own market API. That search typically returns 10+ candidate markets that mention similar keywords or topics.
+                    </li>
+                    <li>
+                      <strong>3. An LLM picks the right one (or none).</strong> A keyword search alone can't tell a live market apart from an old, already-resolved one about the same topic (e.g. last year's Fed meeting vs. next month's). So we hand all 10+ candidates to an LLM, which reads each one and identifies the single market — if any — that's both about the same event and still open for trading. If nothing genuinely matches, it says so, and we stop here.
+                    </li>
+                    <li>
+                      <strong>4. A second LLM decides whether to trade.</strong> Once a market is matched, we show a different LLM call the market's live YES/NO prices and ask it to estimate the true probability of the event. It only recommends buying YES or NO when that estimate clearly supports one side (over 50% confidence); otherwise it says wait.
+                    </li>
+                    <li>
+                      <strong>5. We simulate the trade and track it live.</strong> If a trade is recommended, we open a simulated (paper) position sized to how confident the LLM was — no real money ever moves. From there we track that position's profit/loss in real time against Polymarket's live price, right up until it closes.
+                    </li>
                   </ol>
                 </div>
               </>

@@ -145,18 +145,26 @@
   color: var(--foreground);
 }
 
+.how-it-works-intro {
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  margin-bottom: 12px;
+}
+
 .how-it-works-list {
-  list-style: decimal;
-  padding-left: 18px;
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   font-size: 0.7rem;
   line-height: 1.5;
   color: var(--muted-foreground);
 }
 
 .how-it-works-list strong {
+  display: block;
+  margin-bottom: 2px;
   color: var(--foreground);
 }
 

@@ -1,6 +1,6 @@
 # TrustFilter
 
-TrustFilter is a use case built on the [Telegraph](https://telegraph.ai) platform. It lets anyone submit a phone number, an SMS message, or both and instantly receive a scam risk verdict — powered by the **OpenAI LLM miner** (`gpt-4o-search-preview`) on Telegraph, with each inference call paid on-chain via the [x402](https://x402.org) protocol on Solana and a cryptographic transaction hash returned as proof.
+TrustFilter is a use case built on the [Telegraph](https://telegraphprotocol.com) platform. It lets anyone submit a phone number, an SMS message, or both and instantly receive a scam risk verdict — powered by the **OpenAI LLM miner** (`gpt-4o-search-preview`) on Telegraph, with each inference call paid on-chain via the [x402](https://x402.org) protocol on Solana and a cryptographic transaction hash returned as proof.
 
 ---
 

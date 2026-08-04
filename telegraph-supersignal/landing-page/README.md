@@ -1,6 +1,6 @@
 # Polymarket Sniper Bot — Landing Page
 
-Standalone marketing page for the **Polymarket Sniper Bot**, a use case built on the [Telegraph](https://telegraph.ai) platform. Presents the product's AI decision engine, feature highlights, subscription plans, and a call to action. Deployable independently from the dashboard.
+Standalone marketing page for the **Polymarket Sniper Bot**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Presents the product's AI decision engine, feature highlights, subscription plans, and a call to action. Deployable independently from the dashboard.
 
 ---
 

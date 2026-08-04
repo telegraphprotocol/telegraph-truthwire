@@ -1,6 +1,6 @@
 # ScholarGuard
 
-ScholarGuard is a use case built on the [Telegraph](https://telegraph.ai) platform. It detects AI-generated content in academic documents — upload a PDF or DOCX assignment, and ScholarGuard extracts the text and embedded images, runs them through the **Bitmind** and **ItsAI** subnets on Telegraph, and returns a per-modality verdict with cryptographic on-chain payment proof for each inference call.
+ScholarGuard is a use case built on the [Telegraph](https://telegraphprotocol.com) platform. It detects AI-generated content in academic documents — upload a PDF or DOCX assignment, and ScholarGuard extracts the text and embedded images, runs them through the **Bitmind** and **ItsAI** subnets on Telegraph, and returns a per-modality verdict with cryptographic on-chain payment proof for each inference call.
 
 ---
 

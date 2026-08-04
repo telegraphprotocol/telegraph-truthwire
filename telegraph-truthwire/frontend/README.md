@@ -1,6 +1,6 @@
 # TruthWire — Frontend
 
-React/Vite single-page application for **TruthWire**, a use case built on the [Telegraph](https://telegraph.ai) platform. Paste an X (Twitter) post URL, watch a live terminal feed as the analysis runs, and see whether the content is authentic or AI-generated — with cryptographic on-chain payment proof.
+React/Vite single-page application for **TruthWire**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Paste an X (Twitter) post URL, watch a live terminal feed as the analysis runs, and see whether the content is authentic or AI-generated — with cryptographic on-chain payment proof.
 
 ---
 

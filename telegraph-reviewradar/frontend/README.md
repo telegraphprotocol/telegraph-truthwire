@@ -1,6 +1,6 @@
 # ReviewRadar — Frontend
 
-React/TypeScript/Vite dashboard for **ReviewRadar**, a use case built on the [Telegraph](https://telegraph.ai) platform. Paste an Amazon product URL, watch a live terminal feed as reviews are fetched and analyzed, then see a product preview, an AI-vs-human signal summary, and per-review result cards each with ItsAI verdict and on-chain payment proof.
+React/TypeScript/Vite dashboard for **ReviewRadar**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Paste an Amazon product URL, watch a live terminal feed as reviews are fetched and analyzed, then see a product preview, an AI-vs-human signal summary, and per-review result cards each with ItsAI verdict and on-chain payment proof.
 
 ---
 

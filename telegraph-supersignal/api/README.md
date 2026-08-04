@@ -1,6 +1,6 @@
 # Polymarket Sniper Bot — API
 
-Backend service for **Polymarket Sniper Bot**, a use case built on the [Telegraph](https://telegraph.ai) platform. Manages user authentication via EVM wallet signatures, custodial wallet creation, on-chain subscription verification on Polygon, and a two-hourly decision pipeline that uses Telegraph's **DeSearch** (subnet 101) and **Groq LLM** (subnet 102) subnets — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Polygon.
+Backend service for **Polymarket Sniper Bot**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Manages user authentication via EVM wallet signatures, custodial wallet creation, on-chain subscription verification on Polygon, and a two-hourly decision pipeline that uses Telegraph's **DeSearch** (subnet 101) and **Groq LLM** (subnet 102) subnets — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Polygon.
 
 ---
 

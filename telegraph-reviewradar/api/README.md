@@ -1,6 +1,6 @@
 # ReviewRadar — API
 
-Backend service for **ReviewRadar**, a use case built on the [Telegraph](https://telegraph.ai) platform. It fetches Amazon product reviews via **SerpAPI** and runs each review through the **ItsAI** text-detection subnet on Telegraph, paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
+Backend service for **ReviewRadar**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. It fetches Amazon product reviews via **SerpAPI** and runs each review through the **ItsAI** text-detection subnet on Telegraph, paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
 
 ---
 

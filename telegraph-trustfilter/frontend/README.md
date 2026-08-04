@@ -1,6 +1,6 @@
 # TrustFilter — Frontend
 
-React/Vite single-page application for **TrustFilter**, a use case built on the [Telegraph](https://telegraph.ai) platform. Submit a phone number, an SMS message, or both — a live terminal feed animates each phase of the analysis pipeline, then displays the scam verdict with confidence score, reasoning, and cryptographic on-chain payment proof.
+React/Vite single-page application for **TrustFilter**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Submit a phone number, an SMS message, or both — a live terminal feed animates each phase of the analysis pipeline, then displays the scam verdict with confidence score, reasoning, and cryptographic on-chain payment proof.
 
 ---
 

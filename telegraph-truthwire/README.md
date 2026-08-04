@@ -1,6 +1,6 @@
 # TruthWire
 
-TruthWire is a use case built on the [Telegraph](https://telegraph.ai) platform. It lets anyone paste an X (Twitter) post URL and instantly find out whether its images or text are AI-generated — with every inference call paid on-chain via the [x402](https://x402.org) protocol on Solana and a cryptographic transaction hash returned as proof.
+TruthWire is a use case built on the [Telegraph](https://telegraphprotocol.com) platform. It lets anyone paste an X (Twitter) post URL and instantly find out whether its images or text are AI-generated — with every inference call paid on-chain via the [x402](https://x402.org) protocol on Solana and a cryptographic transaction hash returned as proof.
 
 ---
 

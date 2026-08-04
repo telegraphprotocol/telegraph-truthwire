@@ -1,6 +1,6 @@
 # TrustFilter — API
 
-Backend service for **TrustFilter**, a use case built on the [Telegraph](https://telegraph.ai) platform. It analyzes phone numbers and SMS messages for scam patterns by calling the **OpenAI LLM miner** (`gpt-4o-search-preview`) on Telegraph, paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
+Backend service for **TrustFilter**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. It analyzes phone numbers and SMS messages for scam patterns by calling the **OpenAI LLM miner** (`gpt-4o-search-preview`) on Telegraph, paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
 
 ---
 

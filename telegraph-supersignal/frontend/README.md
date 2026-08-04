@@ -1,6 +1,6 @@
 # Polymarket Sniper Bot — Frontend
 
-React/TypeScript/Vite dashboard for the **Polymarket Sniper Bot**, a use case built on the [Telegraph](https://telegraph.ai) platform. Connect an EVM wallet, activate a subscription plan, toggle automated AI-driven trading, and review the bot's decision history — all in one interface.
+React/TypeScript/Vite dashboard for the **Polymarket Sniper Bot**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Connect an EVM wallet, activate a subscription plan, toggle automated AI-driven trading, and review the bot's decision history — all in one interface.
 
 ---
 

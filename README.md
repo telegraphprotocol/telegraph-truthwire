@@ -1,6 +1,6 @@
 # Telegraph Use Cases
 
-This repository contains a collection of use cases built on the [Telegraph](https://telegraph.ai) platform — a decentralised AI inference network that exposes specialised machine-learning subnets as HTTP APIs. Each subnet performs a specific task (text analysis, image detection, news retrieval, LLM inference) and is accessible to any application via standard HTTP POST requests.
+This repository contains a collection of use cases built on the [Telegraph](https://telegraphprotocol.com) platform — a decentralised AI inference network that exposes specialised machine-learning subnets as HTTP APIs. Each subnet performs a specific task (text analysis, image detection, news retrieval, LLM inference) and is accessible to any application via standard HTTP POST requests.
 
 ---
 

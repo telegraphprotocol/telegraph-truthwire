@@ -1,6 +1,6 @@
 # SuperSignal
 
-SuperSignal is a use case built on the [Telegraph](https://telegraph.ai) platform. Connect your Web3 wallet, activate a subscription, and let it monitor prediction markets, cross-reference them against real-time news via Telegraph's DeSearch subnet, and make AI-driven trade decisions every two hours — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Polygon.
+SuperSignal is a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Connect your Web3 wallet, activate a subscription, and let it monitor prediction markets, cross-reference them against real-time news via Telegraph's DeSearch subnet, and make AI-driven trade decisions every two hours — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Polygon.
 
 ---
 

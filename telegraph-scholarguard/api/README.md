@@ -1,6 +1,6 @@
 # ScholarGuard — API
 
-Backend service for **ScholarGuard**, a use case built on the [Telegraph](https://telegraph.ai) platform. Accepts uploaded academic documents (PDF or DOCX), parses them for text and images, and runs AI-content detection via the **Bitmind** (image) and **ItsAI** (text) subnets on Telegraph — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
+Backend service for **ScholarGuard**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Accepts uploaded academic documents (PDF or DOCX), parses them for text and images, and runs AI-content detection via the **Bitmind** (image) and **ItsAI** (text) subnets on Telegraph — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
 
 ---
 

@@ -1,6 +1,6 @@
 # ReviewRadar
 
-ReviewRadar is a use case built on the [Telegraph](https://telegraph.ai) platform. Paste an Amazon product URL — ReviewRadar fetches recent reviews via **SerpAPI**, runs each one through the **ItsAI** text-detection subnet on Telegraph, and displays an AI-vs-human breakdown with cryptographic on-chain payment proof per review.
+ReviewRadar is a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Paste an Amazon product URL — ReviewRadar fetches recent reviews via **SerpAPI**, runs each one through the **ItsAI** text-detection subnet on Telegraph, and displays an AI-vs-human breakdown with cryptographic on-chain payment proof per review.
 
 ---
 

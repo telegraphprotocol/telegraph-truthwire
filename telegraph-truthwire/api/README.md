@@ -1,6 +1,6 @@
 # TruthWire — API
 
-Backend service for **TruthWire**, a use case built on the [Telegraph](https://telegraph.ai) platform. It fetches X (Twitter) posts and runs them through two AI-detection subnets — **Bitmind** (image analysis) and **ItsAI** (text analysis) — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
+Backend service for **TruthWire**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. It fetches X (Twitter) posts and runs them through two AI-detection subnets — **Bitmind** (image analysis) and **ItsAI** (text analysis) — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Solana.
 
 ---
 

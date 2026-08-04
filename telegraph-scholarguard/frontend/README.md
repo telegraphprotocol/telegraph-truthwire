@@ -1,6 +1,6 @@
 # ScholarGuard — Frontend
 
-React/Vite single-page application for **ScholarGuard**, a use case built on the [Telegraph](https://telegraph.ai) platform. Drag-and-drop a PDF or DOCX assignment, watch a live terminal feed as the document is analyzed, then review per-text and per-image AI-detection results with collapsible on-chain payment proofs.
+React/Vite single-page application for **ScholarGuard**, a use case built on the [Telegraph](https://telegraphprotocol.com) platform. Drag-and-drop a PDF or DOCX assignment, watch a live terminal feed as the document is analyzed, then review per-text and per-image AI-detection results with collapsible on-chain payment proofs.
 
 ---
 

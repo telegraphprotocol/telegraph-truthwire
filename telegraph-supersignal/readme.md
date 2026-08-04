@@ -1,6 +1,6 @@
-# Polymarket Sniper Bot
+# SuperSignal
 
-Polymarket Sniper Bot is a use case built on the [Telegraph](https://telegraph.ai) platform. Connect your Web3 wallet, activate a subscription, and let the bot monitor Polymarket prediction markets, cross-reference them against real-time news via Telegraph's DeSearch subnet, and make AI-driven trade decisions every two hours — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Polygon.
+SuperSignal is a use case built on the [Telegraph](https://telegraph.ai) platform. Connect your Web3 wallet, activate a subscription, and let it monitor prediction markets, cross-reference them against real-time news via Telegraph's DeSearch subnet, and make AI-driven trade decisions every two hours — paying for each inference call on-chain via the [x402](https://x402.org) protocol on Polygon.
 
 ---
 
@@ -9,7 +9,7 @@ Polymarket Sniper Bot is a use case built on the [Telegraph](https://telegraph.a
 1. Users connect their EVM wallet (MetaMask, Coinbase Wallet, etc.) and sign a message to authenticate.
 2. A custodial EVM wallet is created server-side for each user to hold trading funds.
 3. The user selects a subscription plan and sends the required USDC to the treasury address on Polygon. The backend verifies the on-chain transfer before activating the subscription.
-4. Once the bot is toggled on, a cron job runs every two hours: it fetches relevant Polymarket markets by keyword, calls the **DeSearch** subnet (subnet 101) for fresh news context, then passes both to the **Groq LLM** subnet (subnet 102) for a trade decision (YES / NO / HOLD).
+4. Once toggled on, a cron job runs every two hours: it fetches relevant prediction markets by keyword, calls the **DeSearch** subnet (subnet 101) for fresh news context, then passes both to the **Groq LLM** subnet (subnet 102) for a trade decision (YES / NO / HOLD).
 5. Decisions are stored in MongoDB and surfaced on the dashboard with reasoning and on-chain payment proof.
 
 ---
@@ -17,7 +17,7 @@ Polymarket Sniper Bot is a use case built on the [Telegraph](https://telegraph.a
 ## Repository structure
 
 ```
-telegraph-polymarket-bot/
+telegraph-supersignal/
 ├── api/           # Node.js/Express backend (TypeScript)
 ├── frontend/      # React/Vite dashboard (TypeScript)
 └── landing-page/  # Next.js marketing page (TypeScript)
